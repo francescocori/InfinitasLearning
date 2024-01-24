@@ -32,7 +32,26 @@ function App() {
 
     target.reset();
   };
+  const handleAddTest = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
+    const target = event.currentTarget;
+    const testName = target.test.value;
+    const testDescription = target.description.value;
+    const id = crypto.randomUUID();
+    const date = new Date().toLocaleDateString();
+    schoolDispatch?.({
+      type: SchoolActionKind.ADD_TEST,
+      payload: {
+        name: testName,
+        id,
+        description: testDescription,
+        dueDate: date,
+      },
+    });
+
+    target.reset();
+  };
   const handleStudentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -185,6 +204,21 @@ function App() {
           <label htmlFor="student">Student</label>
           <input type="text" id="student" name="student" />
           <button type="submit">Add Student</button>
+        </form>
+        <form onSubmit={handleAddTest} className="form">
+          <div>
+            <label htmlFor="test">Test title</label>
+            <input type="text" id="test" name="test" />
+          </div>
+          <div>
+            <label htmlFor="description">Description</label>
+            <input type="text" id="description" name="description" />
+          </div>
+          {/* <div>
+            <label htmlFor="date">Due date</label>
+            <input type="text" id="date" name="date" />
+          </div> */}
+          <button type="submit">Add Test</button>
         </form>
       </div>
     </div>

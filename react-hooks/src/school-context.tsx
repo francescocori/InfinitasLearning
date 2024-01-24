@@ -4,6 +4,12 @@ export type Student = {
   id: string;
   name: string;
 };
+export type Test = {
+  id: string;
+  name: string;
+  description: string;
+  dueDate: string;
+};
 
 export type Teacher = {
   id: string;
@@ -14,11 +20,13 @@ export type Teacher = {
 export type InitialState = {
   teachers: Teacher[];
   students: Student[];
+  tests: Test[];
 };
 
 export enum SchoolActionKind {
   ADD_TEACHER = "ADD_TEACHER",
   ADD_STUDENT = "ADD_STUDENT",
+  ADD_TEST = "ADD_TEST",
   UPDATE_STUDENT = "UPDATE_STUDENT",
   ASSIGN_STUDENT_TO_TEACHER = "ASSIGN_STUDENT_TO_TEACHER",
 }
@@ -31,6 +39,10 @@ export type SchoolAction =
   | {
       type: SchoolActionKind.ADD_STUDENT;
       payload: Student;
+    }
+  | {
+      type: SchoolActionKind.ADD_TEST;
+      payload: Test;
     }
   | {
       type: SchoolActionKind.UPDATE_STUDENT;
@@ -77,6 +89,8 @@ export function schoolReducer(
       return { ...state, teachers: [...state.teachers, action.payload] };
     case SchoolActionKind.ADD_STUDENT:
       return { ...state, students: [...state.students, action.payload] };
+    case SchoolActionKind.ADD_TEST:
+      return { ...state, tests: [...state.tests, action.payload] };
     case SchoolActionKind.UPDATE_STUDENT:
       const updatedStudents: Student[] = [];
       for (let s of state.students) {
@@ -108,5 +122,6 @@ export function schoolReducer(
 const initialState: InitialState = {
   teachers: [],
   students: [],
+  tests: [],
 };
 console.log("STATE", initialState);
