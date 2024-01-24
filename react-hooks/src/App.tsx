@@ -73,7 +73,7 @@ function App() {
     setTeacherEditingId(null);
     setNewAssignedStudentId(null);
   };
-
+  console.log("STATE", school);
   return (
     <div className="App">
       <div>
@@ -182,7 +182,7 @@ function App() {
         </table>
         <hr></hr>
         <form onSubmit={handleStudentSubmit}>
-          <label htmlFor="student" >Student</label>
+          <label htmlFor="student">Student</label>
           <input type="text" id="student" name="student" />
           <button type="submit">Add Student</button>
         </form>

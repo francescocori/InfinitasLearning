@@ -109,3 +109,4 @@ const initialState: InitialState = {
   teachers: [],
   students: [],
 };
+console.log("STATE", initialState);
