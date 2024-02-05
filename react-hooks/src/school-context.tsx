@@ -3,6 +3,12 @@ import { createContext, useContext, useReducer } from "react";
 export type Student = {
   id: string;
   name: string;
+  assignment: string[];
+};
+export type Assignment = {
+  id: string;
+  name: string;
+  description: string;
 };
 
 export type Teacher = {
@@ -14,13 +20,16 @@ export type Teacher = {
 export type InitialState = {
   teachers: Teacher[];
   students: Student[];
+  assignments: Assignment[];
 };
 
 export enum SchoolActionKind {
   ADD_TEACHER = "ADD_TEACHER",
   ADD_STUDENT = "ADD_STUDENT",
+  ADD_ASSIGNMENT = "ADD_ASSIGNMENT",
   UPDATE_STUDENT = "UPDATE_STUDENT",
   ASSIGN_STUDENT_TO_TEACHER = "ASSIGN_STUDENT_TO_TEACHER",
+  ASSIGN_TEST_TO_STUDENT = "ASSIGN_TEST_TO_STUDENT",
 }
 
 export type SchoolAction =
@@ -33,6 +42,10 @@ export type SchoolAction =
       payload: Student;
     }
   | {
+      type: SchoolActionKind.ADD_ASSIGNMENT;
+      payload: Assignment;
+    }
+  | {
       type: SchoolActionKind.UPDATE_STUDENT;
       payload: Student;
     }
@@ -41,6 +54,13 @@ export type SchoolAction =
       payload: {
         teacherId: string;
         studentId: string;
+      };
+    }
+  | {
+      type: SchoolActionKind.ASSIGN_TEST_TO_STUDENT;
+      payload: {
+        studentId: string;
+        assignmentId: string;
       };
     };
 
@@ -77,6 +97,8 @@ export function schoolReducer(
       return { ...state, teachers: [...state.teachers, action.payload] };
     case SchoolActionKind.ADD_STUDENT:
       return { ...state, students: [...state.students, action.payload] };
+    case SchoolActionKind.ADD_ASSIGNMENT:
+      return { ...state, assignments: [...state.assignments, action.payload] };
     case SchoolActionKind.UPDATE_STUDENT:
       const updatedStudents: Student[] = [];
       for (let s of state.students) {
@@ -100,6 +122,19 @@ export function schoolReducer(
         }
       }
       return { ...state, teachers: updatedTeacher };
+    case SchoolActionKind.ASSIGN_TEST_TO_STUDENT:
+      const updatedStudent: Student[] = [];
+      for (let s of state.students) {
+        if (s.id === action.payload.studentId) {
+          updatedStudent.push({
+            ...s,
+            assignment: [...s.assignment, action.payload.assignmentId],
+          });
+        } else {
+          updatedStudent.push(s);
+        }
+      }
+      return { ...state, students: updatedStudent };
     default:
       return state;
   }
@@ -108,4 +143,5 @@ export function schoolReducer(
 const initialState: InitialState = {
   teachers: [],
   students: [],
+  assignments: [],
 };
