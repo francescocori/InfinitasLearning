@@ -112,18 +112,6 @@ function App() {
     setNewAssignedTestId3(null);
   };
 
-  // const handleAssignAssignment = () => {
-  //   if (studentEditingId2 && newAssignedStudentId2) {
-  //     schoolDispatch?.({
-  //       type: SchoolActionKind.ASSIGN_TEST_TO_STUDENT,
-  //       payload: {
-  //         studentId: studentEditingId2,
-  //         assignmentId: newAssignedStudentId2,
-  //       },
-  //     });
-  //     console.log("state222", school);
-  //   }
-  // };
   console.log("state", school);
 
   return (
@@ -230,79 +218,15 @@ function App() {
                         </button>
                       )}
                     </td>
-                    {/* <td>
-                    <ul>
-                      {student?.assignment?.map((a) => (
-                        <li>
-                          {school?.assignments.map((a1) =>
-                            a === a1.id ? a1.name : ""
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                    {student.id === studentEditingId2 ? (
-                      <>
-                        <select
-                          value={newAssignedStudentId2 || ""}
-                          onChange={(e) =>
-                            setNewAssignedStudentId2(e.target.value)
-                          }
-                        >
-                          <option value={""}></option>
-                          {school?.assignments.map((assignmet) => (
-                            <option value={assignmet.id}>
-                              {assignmet.name}
-                            </option>
-                          ))}
-                        </select>
-                        <button onClick={handleAssignAssignment}>Assign</button>
-                      </>
-                    ) : (
-                      <button onClick={() => setUserEditingId2(student.id)}>
-                        Assign test
-                      </button>
-                    )}
-                  </td> */}
                     <td>
                       <ul>
-                        {/* {student.assignment.map((a) => (
-                          <li>
+                        {student.assignment.map((a) => (
+                          <li key={a}>
                             {school?.assignments.map((a1) =>
-                              a === a1.name ? a1.name : ""
+                              a === a1.id ? a1.name : ""
                             )}
                           </li>
-                        ))} */}
-                        {student?.assignment?.map((s) => {
-                          console.log(
-                            "Outer Mapping - Current Assignment ID:",
-                            s
-                          );
-
-                          return (
-                            <li key={s}>
-                              {school?.assignments.map((s1) => {
-                                console.log(
-                                  "Inner Mapping - Current School Assignment ID:",
-                                  s1.id
-                                );
-
-                                if (s === s1.id) {
-                                  console.log(
-                                    "Match found - Assignment Name:",
-                                    s1.name
-                                  );
-                                  return s1.name;
-                                } else {
-                                  console.log(
-                                    "No match found for Assignment ID:",
-                                    s1.id
-                                  );
-                                  return "";
-                                }
-                              })}
-                            </li>
-                          );
-                        })}
+                        ))}
                       </ul>
 
                       {student.id === studentEditingId3 ? (
