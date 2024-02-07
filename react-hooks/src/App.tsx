@@ -24,6 +24,20 @@ function App() {
   const [newAssignedTestId3, setNewAssignedTestId3] = useState<string | null>(
     null
   );
+  const [isPassed, setIsPassed] = useState(false);
+
+  // Function to handle switch toggle
+  const handleToggle = (
+    studentId: string,
+    testId: string,
+    isPassed: boolean
+  ) => {
+    schoolDispatch?.({
+      type: SchoolActionKind.SCORE_TEST,
+      payload: { studentId, testId, isPassed: !isPassed },
+    });
+  };
+
   const handleTeacherSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -220,11 +234,29 @@ function App() {
                     </td>
                     <td>
                       <ul>
-                        {student.assignment.map((a) => (
-                          <li key={a}>
-                            {school?.assignments.map((a1) =>
-                              a === a1.id ? a1.name : ""
-                            )}
+                        {student.assignment.map((a, i) => (
+                          <li key={i} className="flex">
+                            <div className="flex">
+                              {school?.assignments.map((a1) =>
+                                a.testId === a1.id ? (
+                                  <div className="flex" key={a1.id}>
+                                    {a1.name}
+                                    <input
+                                      type="checkbox"
+                                      id="switch"
+                                      checked={a.isPassed}
+                                      onChange={() =>
+                                        handleToggle(
+                                          student.id,
+                                          a1.id,
+                                          a.isPassed
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                ) : null
+                              )}
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -239,7 +271,7 @@ function App() {
                           >
                             <option value={""}></option>
                             {school?.assignments.map((assignment) => (
-                              <option value={assignment.id}>
+                              <option value={assignment.id} key={assignment.id}>
                                 {assignment.name}
                               </option>
                             ))}

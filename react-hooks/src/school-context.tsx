@@ -3,7 +3,12 @@ import { createContext, useContext, useReducer } from "react";
 export type Student = {
   id: string;
   name: string;
-  assignment: string[];
+  // assignment: string[];
+  assignment: StudentTest[];
+};
+export type StudentTest = {
+  testId: string;
+  isPassed: boolean;
 };
 export type Assignment = {
   id: string;
@@ -30,9 +35,18 @@ export enum SchoolActionKind {
   UPDATE_STUDENT = "UPDATE_STUDENT",
   ASSIGN_STUDENT_TO_TEACHER = "ASSIGN_STUDENT_TO_TEACHER",
   ASSIGN_TEST_TO_STUDENT = "ASSIGN_TEST_TO_STUDENT",
+  SCORE_TEST = "SCORE_TEST",
 }
 
 export type SchoolAction =
+  | {
+      type: SchoolActionKind.SCORE_TEST;
+      payload: {
+        studentId: string;
+        testId: string;
+        isPassed: boolean;
+      };
+    }
   | {
       type: SchoolActionKind.ADD_TEACHER;
       payload: Teacher;
@@ -128,13 +142,31 @@ export function schoolReducer(
         if (s.id === action.payload.studentId) {
           updatedStudent.push({
             ...s,
-            assignment: [...s.assignment, action.payload.assignmentId],
+            assignment: [
+              ...s.assignment,
+              { testId: action.payload.assignmentId, isPassed: false },
+            ],
           });
         } else {
           updatedStudent.push(s);
         }
       }
       return { ...state, students: updatedStudent };
+    case SchoolActionKind.SCORE_TEST:
+      const { studentId, testId, isPassed } = action.payload;
+      const updatedStudents3 = state.students.map((student) => {
+        if (student.id === studentId) {
+          const updatedStudentTest = student.assignment.map((assignment) => {
+            if (assignment.testId === testId) {
+              return { ...assignment, isPassed };
+            }
+            return assignment;
+          });
+          return { ...student, assignment: updatedStudentTest };
+        }
+        return student;
+      });
+      return { ...state, students: updatedStudents3 };
     default:
       return state;
   }
