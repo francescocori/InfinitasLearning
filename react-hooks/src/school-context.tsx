@@ -114,47 +114,81 @@ export function schoolReducer(
     case SchoolActionKind.ADD_ASSIGNMENT:
       return { ...state, assignments: [...state.assignments, action.payload] };
     case SchoolActionKind.UPDATE_STUDENT:
+      //const updatedStudents: Student[] = [];
+      // for (let s of state.students) {
+      //   if (s.id === action.payload.id) {
+      //     updatedStudents.push(action.payload);
+      //   } else {
+      //     updatedStudents.push(s);
+      //   }
+      // }
+      // return { ...state, students: updatedStudents };
       const updatedStudents: Student[] = [];
-      for (let s of state.students) {
-        if (s.id === action.payload.id) {
+      state.students.map((student) => {
+        if (student.id === action.payload.id) {
           updatedStudents.push(action.payload);
         } else {
-          updatedStudents.push(s);
+          updatedStudents.push(student);
         }
-      }
+      });
       return { ...state, students: updatedStudents };
     case SchoolActionKind.ASSIGN_STUDENT_TO_TEACHER:
+      // const updatedTeacher: Teacher[] = [];
+      // for (let t of state.teachers) {
+      //   if (t.id === action.payload.teacherId) {
+      //     updatedTeacher.push({
+      //       ...t,
+      //       students: [...t.students, action.payload.studentId],
+      //     });
+      //   } else {
+      //     updatedTeacher.push(t);
+      //   }
+      // }
+      // return { ...state, teachers: updatedTeacher };
       const updatedTeacher: Teacher[] = [];
-      for (let t of state.teachers) {
-        if (t.id === action.payload.teacherId) {
+      state.teachers.map((teacher) => {
+        if (teacher.id === action.payload.teacherId) {
           updatedTeacher.push({
-            ...t,
-            students: [...t.students, action.payload.studentId],
+            ...teacher,
+            students: [...teacher.students, action.payload.studentId],
           });
-        } else {
-          updatedTeacher.push(t);
+
+          return teacher;
         }
-      }
+      });
       return { ...state, teachers: updatedTeacher };
     case SchoolActionKind.ASSIGN_TEST_TO_STUDENT:
-      const updatedStudent: Student[] = [];
-      for (let s of state.students) {
-        if (s.id === action.payload.studentId) {
-          updatedStudent.push({
-            ...s,
+      //const updatedStudent: Student[] = [];
+      // for (let s of state.students) {
+      //   if (s.id === action.payload.studentId) {
+      //     updatedStudent.push({
+      //       ...s,
+      //       assignment: [
+      //         ...s.assignment,
+      //         { testId: action.payload.assignmentId, isPassed: false },
+      //       ],
+      //     });
+      //   } else {
+      //     updatedStudent.push(s);
+      //   }
+      // }
+      // return { ...state, students: updatedStudent };
+      const updatedStudent = state.students.map((student) => {
+        if (student.id === action.payload.studentId) {
+          return {
+            ...student,
             assignment: [
-              ...s.assignment,
+              ...student.assignment,
               { testId: action.payload.assignmentId, isPassed: false },
             ],
-          });
-        } else {
-          updatedStudent.push(s);
+          };
         }
-      }
+        return student;
+      });
       return { ...state, students: updatedStudent };
     case SchoolActionKind.SCORE_TEST:
       const { studentId, testId, isPassed } = action.payload;
-      const updatedStudents3 = state.students.map((student) => {
+      const updatedStudent3 = state.students.map((student) => {
         if (student.id === studentId) {
           const updatedStudentTest = student.assignment.map((assignment) => {
             if (assignment.testId === testId) {
@@ -166,7 +200,7 @@ export function schoolReducer(
         }
         return student;
       });
-      return { ...state, students: updatedStudents3 };
+      return { ...state, students: updatedStudent3 };
     default:
       return state;
   }
